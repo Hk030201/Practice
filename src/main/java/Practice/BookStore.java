@@ -25,22 +25,31 @@ public class BookStore
                 .replace("]", "")
                 .trim();
 
-        try{
+        LocalDate dueDate = null;
+        int fine = 0,exceptionFlag = 0;
+
+        try {
+            validate.bookLength(bookName);
             validate.checkDateFormat(issuedDate);
             validate.checkDateFormat(returnDate);
-            validate.bookLength(bookName);
+
+            dueDate = dateUtils.getDueDate(issuedDate);
+            fine = dateUtils.calculateFine(dueDate,returnDate);
+
         }catch (Exception e) {
-            e.printStackTrace();
+            if(e.getMessage()!=null)
+            {
+                exceptionFlag = 1;
+                System.out.println(e.getMessage());
+            }
         }
-
-        LocalDate dueDate = dateUtils.getDueDate(issuedDate);
-
-        int fine = dateUtils.calculateFine(dueDate,returnDate);
-
-        if(fine>0)
-            System.out.println("Book-Name:"+bookName+" Due-Date:"+dueDate+" Fine:$"+fine);
-        else
-            System.out.println("Book-Name:"+bookName+" Due-Date:"+dueDate+" Fine:$0");
+        if(exceptionFlag == 0)
+        {
+            if(fine>0)
+                System.out.println("Book-Name:"+bookName+" Due-Date:"+dueDate+" Fine:$"+fine);
+            else
+                System.out.println("Book-Name:"+bookName+" Due-Date:"+dueDate+" Fine:$0");
+        }
     }
 
     public static void processInput(String inputs[])
@@ -62,3 +71,8 @@ public class BookStore
         BookStore.processInput(inputs);
     }
 }
+//Hi this is just a checking for exception of book length greater than thirty 11-02-2020 29-02-2020
+//Kill Bill 11-02-2020 29-02-2020
+
+//    Kill Bill 11/02/2020 29/02/2020
+//    Kill Bill 11-02-2020 29-02-2020
