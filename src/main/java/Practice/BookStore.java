@@ -8,7 +8,7 @@ public class BookStore
 {
     public static void collectData(String input)
     {
-        DateUtils dateUtils=new DateUtils();
+        DateTimeUtils dateTimeUtils =new DateTimeUtils();
         Validate validate= new Validate();
 
         String data[] = input.split(" ");
@@ -33,8 +33,8 @@ public class BookStore
             validate.checkDateFormat(issuedDate);
             validate.checkDateFormat(returnDate);
 
-            dueDate = dateUtils.getDueDate(issuedDate);
-            fine = dateUtils.calculateFine(dueDate,returnDate);
+            dueDate = dateTimeUtils.getDueDate(issuedDate);
+            fine = dateTimeUtils.calculateFine(dueDate,returnDate);
 
         }catch (Exception e) {
             if(e.getMessage()!=null)
