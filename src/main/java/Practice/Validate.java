@@ -13,4 +13,11 @@ public class Validate
         if(!date.matches("\\d{2}/\\d{2}/\\d{4}"))
             throw new Exception("Date format not matching");
     }
+
+    public void timeInHrsAndMin(String time) throws Exception
+    {
+        if(!time.matches("\\d{2}:\\d{2}"))
+            throw new Exception("Time format not matching");
+    }
+
 }

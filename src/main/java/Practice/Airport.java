@@ -21,7 +21,7 @@ public class Airport
                 runwaysInUse.add(departureTime.get(i));
                 runwaysInUse.remove(0);
             }
-            if(returnValue==1 || timeDiff>12)
+            else
                 runwaysInUse.add(departureTime.get(i));
             Collections.sort(runwaysInUse);
         }
@@ -38,25 +38,58 @@ public class Airport
 
         TreeMap<LocalTime,LocalTime> timingsOfPlanes= new TreeMap<>();
 
+        int exceptionFlag = 0,validationFlag = 0;
+        Validate validate = new Validate();
+
         for(int i=0 ; i<noOfPlanes ; i++)
         {
-            timeInString = ob.next();
-            time = dateTimeUtils.convertStringToTime
-                    (timeInString.substring(0,2)+":"+timeInString.substring(2,4));
+            do {
+                timeInString = ob.next();
+
+                try {
+                    validate.timeInHrsAndMin(timeInString);
+                    time = dateTimeUtils.convertStringToTime(timeInString.substring(0,2)+":"+timeInString.substring(2,4));
+                    validate.timeInHrsAndMin(time.toString());
+                    validationFlag = 1;
+                }catch (Exception e) {
+                    if(e.getMessage()!=null)
+                    {
+                        exceptionFlag = 1;
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }while(validationFlag == 0);
             timingsOfPlanes.put(time,time);
             arrayOfArrivalTime[i]=time;
         }
         for(int i=0 ; i<noOfPlanes ; i++)
         {
-            timeInString = ob.next();
-            time = dateTimeUtils.convertStringToTime
-                    (timeInString.substring(0,2)+":"+timeInString.substring(2,4));
+            do {
+                timeInString = ob.next();
+
+                try {
+                    validate.timeInHrsAndMin(timeInString);
+                    time = dateTimeUtils.convertStringToTime(timeInString.substring(0,2)+":"+timeInString.substring(2,4));
+                    validate.timeInHrsAndMin(time.toString());
+                    exceptionFlag = 0;
+                }catch (Exception e) {
+                    if(e.getMessage()!=null)
+                    {
+                        exceptionFlag = 1;
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }while(exceptionFlag == 1);
             timingsOfPlanes.put(arrayOfArrivalTime[i],time);
         }
-        ArrayList<LocalTime> arrival = new ArrayList<>(timingsOfPlanes.keySet());
-        ArrayList<LocalTime> departure = new ArrayList<>(timingsOfPlanes.values());
 
-        System.out.println("Minimum number of runways required: "+Airport.calculateNoOfRunways(arrival,departure));
+        if(exceptionFlag ==0)
+        {
+            ArrayList<LocalTime> arrival = new ArrayList<>(timingsOfPlanes.keySet());
+            ArrayList<LocalTime> departure = new ArrayList<>(timingsOfPlanes.values());
+
+            System.out.println("Minimum number of runways required: "+Airport.calculateNoOfRunways(arrival,departure));
+        }
     }
     public static void main(String[] args)
     {
@@ -76,15 +109,3 @@ public class Airport
 
 //0900 0940 0950 1100 1500 1800
 //0910 1200 1120 1130 1900 2000
-
-//        int noOfPlatforms = 1;
-//        for (int i=1; i<arrivalTime.size() ; i++)
-//        {
-//            for (int j=i-1; j<departureTime.size(); j++)
-//            {
-//                int val = arrivalTime.get(i).compareTo(departureTime.get(j));
-//                if(val==-1)
-//                    noOfPlatforms++;
-//            }
-//        }
-//        return noOfPlatforms;
